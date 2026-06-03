@@ -41,6 +41,14 @@
   margin-bottom: 16px;
 }
 
+.kaizen-ranking__selected {
+  color: #ffdf5d;
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
 .kaizen-ranking__title {
   font-size: clamp(1.8rem, 5vw, 2.8rem);
   font-weight: 800;
@@ -367,6 +375,31 @@
   padding: 10px 14px;
   outline: none;
   font-family: inherit;
+}
+
+.kaizen-ranking__add-select {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, #ffffff 50%) calc(100% - 16px) 50% / 6px 6px no-repeat,
+    rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(210, 210, 210, 0.24);
+  border-radius: 10px;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  min-height: 42px;
+  outline: none;
+  padding: 0 38px 0 12px;
+}
+
+.kaizen-ranking__add-select:focus {
+  border-color: #0099cc;
+}
+
+.kaizen-ranking__add-select option {
+  background: #082a36;
+  color: #ffffff;
 }
 
 .kaizen-ranking__confirm-button {

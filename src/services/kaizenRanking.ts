@@ -3,17 +3,27 @@ import { supabase } from "../lib/supabase";
 export type Player = {
   id: string;
   name: string;
+  category: RankingCategory;
   points: number;
   created_at?: string;
   updated_at?: string;
 };
 
-const PLAYERS_TABLE = "kaizen_players";
+export type RankingCategory = "sistemico" | "operacional";
 
-export async function listPlayers() {
+export const rankingCategoryOptions = [
+  { value: "sistemico", label: "Sistemico" },
+  { value: "operacional", label: "Operacional" },
+] satisfies Array<{ value: RankingCategory; label: string }>;
+
+const PLAYERS_TABLE = "kaizen_players";
+const PLAYER_FIELDS = "id,name,category,points,created_at,updated_at";
+
+export async function listPlayers(category: RankingCategory) {
   const { data, error } = await supabase
     .from(PLAYERS_TABLE)
-    .select("id,name,points,created_at,updated_at")
+    .select(PLAYER_FIELDS)
+    .eq("category", category)
     .order("points", { ascending: false })
     .order("name", { ascending: true });
 
@@ -22,11 +32,11 @@ export async function listPlayers() {
   return data ?? [];
 }
 
-export async function createPlayer(name: string) {
+export async function createPlayer(name: string, category: RankingCategory) {
   const { data, error } = await supabase
     .from(PLAYERS_TABLE)
-    .insert({ name, points: 0 })
-    .select("id,name,points,created_at,updated_at")
+    .insert({ name, category, points: 0 })
+    .select(PLAYER_FIELDS)
     .single();
 
   if (error) throw error;
@@ -45,7 +55,7 @@ export async function updatePlayerName(id: string, name: string) {
     .from(PLAYERS_TABLE)
     .update({ name })
     .eq("id", id)
-    .select("id,name,points,created_at,updated_at")
+    .select(PLAYER_FIELDS)
     .single();
 
   if (error) throw error;
@@ -58,7 +68,7 @@ export async function updatePlayerPoints(id: string, points: number) {
     .from(PLAYERS_TABLE)
     .update({ points })
     .eq("id", id)
-    .select("id,name,points,created_at,updated_at")
+    .select(PLAYER_FIELDS)
     .single();
 
   if (error) throw error;

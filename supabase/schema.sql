@@ -7,10 +7,28 @@ create table if not exists public.profiles (
 create table if not exists public.kaizen_players (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  category text not null default 'sistemico',
   points numeric(10, 1) not null default 0 check (points >= 0),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.kaizen_players
+add column if not exists category text not null default 'sistemico';
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'kaizen_players_category_check'
+  ) then
+    alter table public.kaizen_players
+    add constraint kaizen_players_category_check
+    check (category in ('sistemico', 'operacional'));
+  end if;
+end;
+$$;
 
 create or replace function public.set_updated_at()
 returns trigger

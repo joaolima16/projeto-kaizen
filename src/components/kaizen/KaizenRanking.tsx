@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState, type DragEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type DragEvent } from "react";
 import { isSupabaseConfigured, supabase } from "../../lib/supabase";
 import {
   createPlayer,
   deletePlayer,
   listPlayers,
+  rankingCategoryOptions,
   replacePlayerScores,
   type Player,
+  type RankingCategory,
   updatePlayerName,
   updatePlayerPoints,
 } from "../../services/kaizenRanking";
@@ -13,6 +15,11 @@ import "./KaizenRanking.css";
 
 type MedalProps = {
   position: number;
+};
+
+type KaizenRankingProps = {
+  selectedRankingCategory: RankingCategory;
+  selectedRankingLabel: string;
 };
 
 function Medal({ position }: MedalProps) {
@@ -39,13 +46,17 @@ function sorted(list: Player[]) {
   return [...list].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
 }
 
-export default function KaizenRanking() {
+export default function KaizenRanking({
+  selectedRankingCategory,
+  selectedRankingLabel,
+}: KaizenRankingProps) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [newName, setNewName] = useState("");
+  const [newCategory, setNewCategory] = useState<RankingCategory>(selectedRankingCategory);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
   const [pendingPoints, setPendingPoints] = useState<Record<string, string>>({});
@@ -58,42 +69,25 @@ export default function KaizenRanking() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    loadPlayers();
-    loadSession();
-
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(Boolean(session?.user));
-      checkAdmin(session?.user.id);
-    });
-
-    return () => data.subscription.unsubscribe();
-  }, []);
-
-  async function loadPlayers() {
+  const loadPlayers = useCallback(async () => {
     if (!isSupabaseConfigured) {
       setLoading(false);
       return;
     }
 
     try {
+      setLoading(true);
       setErrorMessage("");
-      setPlayers(await listPlayers());
+      setPlayers(await listPlayers(selectedRankingCategory));
     } catch (error) {
       console.error(error);
       setErrorMessage("Nao foi possivel carregar o ranking.");
     } finally {
       setLoading(false);
     }
-  }
+  }, [selectedRankingCategory]);
 
-  async function loadSession() {
-    const { data } = await supabase.auth.getSession();
-    setIsLoggedIn(Boolean(data.session?.user));
-    await checkAdmin(data.session?.user.id);
-  }
-
-  async function checkAdmin(userId?: string) {
+  const checkAdmin = useCallback(async (userId?: string) => {
     if (!userId) {
       setIsAdmin(false);
       return;
@@ -106,7 +100,30 @@ export default function KaizenRanking() {
       .single();
 
     setIsAdmin(!error && data?.role === "admin");
-  }
+  }, []);
+
+  const loadSession = useCallback(async () => {
+    const { data } = await supabase.auth.getSession();
+    setIsLoggedIn(Boolean(data.session?.user));
+    await checkAdmin(data.session?.user.id);
+  }, [checkAdmin]);
+
+  useEffect(() => {
+    const loadTimer = window.setTimeout(() => {
+      loadPlayers();
+      loadSession();
+    }, 0);
+
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(Boolean(session?.user));
+      checkAdmin(session?.user.id);
+    });
+
+    return () => {
+      window.clearTimeout(loadTimer);
+      data.subscription.unsubscribe();
+    };
+  }, [checkAdmin, loadPlayers, loadSession]);
 
   async function runSave(action: () => Promise<void>) {
     try {
@@ -150,9 +167,12 @@ export default function KaizenRanking() {
     if (!isAdmin || !newName.trim()) return;
 
     await runSave(async () => {
-      const created = await createPlayer(newName.trim());
-      setPlayers((current) => sorted([...current, created]));
+      const created = await createPlayer(newName.trim(), newCategory);
+      if (created.category === selectedRankingCategory) {
+        setPlayers((current) => sorted([...current, created]));
+      }
       setNewName("");
+      setNewCategory(selectedRankingCategory);
       setShowAdd(false);
     });
   }
@@ -290,11 +310,12 @@ export default function KaizenRanking() {
     <div className="kaizen-ranking">
       <div className="kaizen-ranking__header">
         <div className="kaizen-ranking__badge">Melhoria Continua</div>
+        <div className="kaizen-ranking__selected">{selectedRankingLabel}</div>
         <h1 className="kaizen-ranking__title">Ranking Kaizen</h1>
         <p className="kaizen-ranking__subtitle">
           {isAdmin
-            ? "Modo admin ativo: edite nomes, pontos e participantes."
-            : "Visualizacao publica do ranking de pontos Kaizen."}
+            ? `Modo admin ativo: edite nomes, pontos e participantes no ${selectedRankingLabel.toLowerCase()}.`
+            : `Visualizacao publica do ${selectedRankingLabel.toLowerCase()} de pontos Kaizen.`}
         </p>
 
         <div className="kaizen-ranking__admin-panel">
@@ -495,6 +516,7 @@ export default function KaizenRanking() {
               <button
                 className="kaizen-ranking__add-button"
                 onClick={() => {
+                  setNewCategory(selectedRankingCategory);
                   setShowAdd(true);
                   window.setTimeout(() => nameInputRef.current?.focus(), 50);
                 }}
@@ -515,9 +537,21 @@ export default function KaizenRanking() {
                     if (event.key === "Escape") {
                       setShowAdd(false);
                       setNewName("");
+                      setNewCategory(selectedRankingCategory);
                     }
                   }}
                 />
+                <select
+                  className="kaizen-ranking__add-select"
+                  value={newCategory}
+                  onChange={(event) => setNewCategory(event.target.value as RankingCategory)}
+                >
+                  {rankingCategoryOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
                 <button
                   className="kaizen-ranking__confirm-button"
                   onClick={addPlayer}
@@ -530,6 +564,7 @@ export default function KaizenRanking() {
                   onClick={() => {
                     setShowAdd(false);
                     setNewName("");
+                    setNewCategory(selectedRankingCategory);
                   }}
                   type="button"
                 >

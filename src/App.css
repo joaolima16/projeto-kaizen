@@ -11,6 +11,55 @@
   background: transparent;
 }
 
+.kaizen-page__top-selector {
+  align-items: center;
+  background: rgba(0, 25, 35, 0.84);
+  border-bottom: 1px solid rgba(210, 210, 210, 0.16);
+  backdrop-filter: blur(14px);
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 12px 16px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.kaizen-page__selector-label {
+  color: #b8c3c9;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.kaizen-page__selector {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, #ffffff 50%) calc(100% - 16px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, #0099cc, #007aa3);
+  border: 1px solid rgba(139, 220, 248, 0.5);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  min-height: 38px;
+  min-width: 210px;
+  outline: none;
+  padding: 0 38px 0 14px;
+}
+
+.kaizen-page__selector:focus {
+  box-shadow: 0 0 0 3px rgba(0, 153, 204, 0.28);
+}
+
+.kaizen-page__selector option {
+  background: #082a36;
+  color: #ffffff;
+}
+
 .kaizen-awards {
   border-top: 1px solid rgba(210, 210, 210, 0.16);
   padding: 8px 16px 56px;
@@ -124,6 +173,17 @@
 }
 
 @media (max-width: 760px) {
+  .kaizen-page__top-selector {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .kaizen-page__selector {
+    min-width: 0;
+    width: 100%;
+  }
+
   .kaizen-awards {
     padding-bottom: 40px;
   }

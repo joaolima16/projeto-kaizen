@@ -1,5 +1,20 @@
+import { useState } from 'react'
 import './App.css'
 import KaizenRanking from './components/kaizen/KaizenRanking'
+import type { RankingCategory } from './services/kaizenRanking'
+
+const rankingOptions = [
+  { value: "sistemico", label: "Ranking sistemico" },
+  { value: "operacional", label: "Ranking operacional" },
+] satisfies Array<{ value: RankingCategory; label: string }>
+
+function getRankingOption(value: RankingCategory) {
+  return rankingOptions.find((option) => option.value === value) ?? rankingOptions[0]
+}
+
+function isRankingCategory(value: string): value is RankingCategory {
+  return rankingOptions.some((option) => option.value === value)
+}
 
 const awards = [
   {
@@ -21,9 +36,36 @@ const awards = [
 ]
 
 function App() {
+  const [selectedRanking, setSelectedRanking] = useState(rankingOptions[0])
+
   return (
     <main className="kaizen-page">
-      <KaizenRanking />
+      <div className="kaizen-page__top-selector" aria-label="Seletor de ranking">
+        <label className="kaizen-page__selector-label" htmlFor="ranking-selector">
+          Ranking
+        </label>
+        <select
+          className="kaizen-page__selector"
+          id="ranking-selector"
+          value={selectedRanking.value}
+          onChange={(event) => {
+            if (isRankingCategory(event.target.value)) {
+              setSelectedRanking(getRankingOption(event.target.value))
+            }
+          }}
+        >
+          {rankingOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <KaizenRanking
+        selectedRankingCategory={selectedRanking.value}
+        selectedRankingLabel={selectedRanking.label}
+      />
 
       <section className="kaizen-awards" aria-labelledby="kaizen-awards-title">
         <div className="kaizen-awards__content">
