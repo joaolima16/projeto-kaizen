@@ -4,6 +4,7 @@
     radial-gradient(circle at top left, rgba(0, 153, 204, 0.24), transparent 340px),
     linear-gradient(135deg, #001923 0%, #082a36 48%, #111827 100%);
   font-family: "Sora", sans-serif;
+  overflow-x: hidden;
 }
 
 .kaizen-page .kaizen-ranking {
@@ -62,7 +63,7 @@
 
 .kaizen-awards {
   border-top: 1px solid rgba(210, 210, 210, 0.16);
-  padding: 8px 16px 56px;
+  padding: 8px clamp(14px, 4vw, 24px) 56px;
 }
 
 .kaizen-awards__content {
@@ -120,7 +121,7 @@
   border-radius: 8px;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
   min-height: 178px;
-  padding: 20px;
+  padding: clamp(16px, 4vw, 20px);
 }
 
 .kaizen-awards__cycle {
@@ -177,6 +178,7 @@
     align-items: stretch;
     flex-direction: column;
     gap: 6px;
+    padding: 10px 14px;
   }
 
   .kaizen-page__selector {
@@ -194,5 +196,29 @@
 
   .kaizen-awards__card {
     min-height: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .kaizen-page__selector-label {
+    font-size: 0.72rem;
+  }
+
+  .kaizen-page__selector {
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+
+  .kaizen-awards {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .kaizen-awards__prize {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+    padding: 10px 12px;
   }
 }

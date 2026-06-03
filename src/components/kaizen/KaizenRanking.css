@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
 }
 
 .kaizen-ranking--loading {
@@ -24,7 +25,7 @@
 .kaizen-ranking__header {
   width: 100%;
   max-width: 680px;
-  padding: 48px 24px 24px;
+  padding: clamp(32px, 8vw, 48px) clamp(16px, 5vw, 24px) 24px;
   text-align: center;
 }
 
@@ -61,6 +62,7 @@
 .kaizen-ranking__subtitle {
   color: #b8c3c9;
   font-size: 0.9rem;
+  line-height: 1.5;
   margin-bottom: 0;
 }
 
@@ -74,7 +76,7 @@
 }
 
 .kaizen-ranking__admin-input {
-  width: 150px;
+  width: min(150px, 100%);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(210, 210, 210, 0.24);
   border-radius: 8px;
@@ -137,7 +139,7 @@
 .kaizen-ranking__container {
   width: 100%;
   max-width: 680px;
-  padding: 0 16px 48px;
+  padding: 0 clamp(12px, 4vw, 16px) 48px;
 }
 
 .kaizen-ranking__card {
@@ -147,7 +149,7 @@
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(210, 210, 210, 0.2);
   border-radius: 8px;
-  padding: 16px 20px;
+  padding: clamp(14px, 4vw, 16px) clamp(14px, 4vw, 20px);
   margin-bottom: 10px;
   cursor: grab;
   opacity: 1;
@@ -248,6 +250,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 0 0 auto;
 }
 
 .kaizen-ranking__points-button {
@@ -318,6 +321,7 @@
   font-weight: 800;
   min-height: 30px;
   padding: 0 10px;
+  white-space: nowrap;
 }
 
 .kaizen-ranking__delete-button {
@@ -363,10 +367,12 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .kaizen-ranking__add-input {
   flex: 1;
+  min-width: 180px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(210, 210, 210, 0.24);
   border-radius: 10px;
@@ -389,6 +395,7 @@
   font-family: inherit;
   font-size: 0.9rem;
   min-height: 42px;
+  min-width: 150px;
   outline: none;
   padding: 0 38px 0 12px;
 }
@@ -433,27 +440,102 @@
 }
 
 @media (max-width: 640px) {
+  .kaizen-ranking__header {
+    padding-top: 28px;
+  }
+
+  .kaizen-ranking__admin-panel {
+    align-items: stretch;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 320px;
+  }
+
   .kaizen-ranking__card {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    align-items: center;
+    display: grid;
+    gap: 10px 12px;
+    grid-template-columns: 32px minmax(0, 1fr) auto;
   }
 
   .kaizen-ranking__name-block {
-    flex-basis: calc(100% - 46px);
+    grid-column: 2 / 4;
   }
 
   .kaizen-ranking__points-block {
-    margin-left: 46px;
+    grid-column: 2 / 4;
+    margin-left: 0;
     flex-wrap: wrap;
+  }
+
+  .kaizen-ranking__delete-button {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
   }
 
   .kaizen-ranking__admin-input {
     width: 100%;
-    max-width: 280px;
+    max-width: none;
   }
 
   .kaizen-ranking__add-form {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .kaizen-ranking__add-input,
+  .kaizen-ranking__add-select,
+  .kaizen-ranking__confirm-button,
+  .kaizen-ranking__cancel-button {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .kaizen-ranking__badge {
+    font-size: 0.64rem;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .kaizen-ranking__selected {
+    font-size: 0.76rem;
+  }
+
+  .kaizen-ranking__title {
+    font-size: 1.7rem;
+  }
+
+  .kaizen-ranking__card {
+    grid-template-columns: 30px minmax(0, 1fr);
+    padding: 14px 12px;
+  }
+
+  .kaizen-ranking__rank {
+    min-width: 30px;
+  }
+
+  .kaizen-ranking__name-block,
+  .kaizen-ranking__points-block {
+    grid-column: 2;
+  }
+
+  .kaizen-ranking__points-button {
+    height: 32px;
+    width: 32px;
+  }
+
+  .kaizen-ranking__points-confirm-button {
+    width: 100%;
+  }
+
+  .kaizen-ranking__delete-button {
+    grid-column: 2;
+    grid-row: auto;
+    justify-self: start;
+    padding-left: 0;
   }
 }
