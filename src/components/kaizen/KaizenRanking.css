@@ -459,13 +459,14 @@
     grid-template-columns: 32px minmax(0, 1fr) auto;
   }
 
-  .kaizen-ranking__name-block {
-    grid-column: 2 / 4;
+  .kaizen-ranking__points-block {
+    justify-self: end;
+    margin-left: 0;
   }
 
-  .kaizen-ranking__points-block {
+  .kaizen-ranking__points-block:has(.kaizen-ranking__points-button) {
     grid-column: 2 / 4;
-    margin-left: 0;
+    justify-self: start;
     flex-wrap: wrap;
   }
 
@@ -510,7 +511,7 @@
   }
 
   .kaizen-ranking__card {
-    grid-template-columns: 30px minmax(0, 1fr);
+    grid-template-columns: 30px minmax(0, 1fr) auto;
     padding: 14px 12px;
   }
 
@@ -520,7 +521,7 @@
 
   .kaizen-ranking__name-block,
   .kaizen-ranking__points-block {
-    grid-column: 2;
+    grid-column: auto;
   }
 
   .kaizen-ranking__points-button {
@@ -533,9 +534,8 @@
   }
 
   .kaizen-ranking__delete-button {
-    grid-column: 2;
-    grid-row: auto;
-    justify-self: start;
-    padding-left: 0;
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
   }
 }
