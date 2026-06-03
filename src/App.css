@@ -1,0 +1,138 @@
+.kaizen-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(0, 153, 204, 0.24), transparent 340px),
+    linear-gradient(135deg, #001923 0%, #082a36 48%, #111827 100%);
+  font-family: "Sora", sans-serif;
+}
+
+.kaizen-page .kaizen-ranking {
+  min-height: auto;
+  background: transparent;
+}
+
+.kaizen-awards {
+  border-top: 1px solid rgba(210, 210, 210, 0.16);
+  padding: 8px 16px 56px;
+}
+
+.kaizen-awards__content {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.kaizen-awards__header {
+  max-width: 680px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+
+.kaizen-awards__badge {
+  display: inline-block;
+  background: rgba(255, 205, 0, 0.14);
+  border: 1px solid rgba(255, 205, 0, 0.38);
+  border-radius: 6px;
+  color: #ffdf5d;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+  padding: 4px 14px;
+  text-transform: uppercase;
+}
+
+.kaizen-awards__title {
+  color: #ffffff;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 10px;
+}
+
+.kaizen-awards__subtitle {
+  color: #b8c3c9;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.kaizen-awards__grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.kaizen-awards__card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(210, 210, 210, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+  min-height: 178px;
+  padding: 20px;
+}
+
+.kaizen-awards__cycle {
+  align-items: center;
+  background: #0099cc;
+  border-radius: 999px;
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 800;
+  justify-content: center;
+  margin-bottom: 18px;
+  min-height: 28px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+.kaizen-awards__card-title {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+.kaizen-awards__prizes {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.kaizen-awards__prize {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(210, 210, 210, 0.18);
+  border-radius: 8px;
+  color: #d9e3e8;
+  display: flex;
+  font-size: 0.82rem;
+  font-weight: 700;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 0 14px;
+}
+
+.kaizen-awards__prize strong {
+  color: #ffdf5d;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .kaizen-awards {
+    padding-bottom: 40px;
+  }
+
+  .kaizen-awards__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kaizen-awards__card {
+    min-height: auto;
+  }
+}
